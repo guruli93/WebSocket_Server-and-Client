@@ -1,69 +1,83 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.WebSockets;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.OpenApi.Models;
 
-
-// Add WebSocket support
-builder.Services.AddWebSockets(options =>
+public class Startup
 {
-    options.KeepAliveInterval = TimeSpan.FromSeconds(120);
-
-
-    
-});
-
-static void ConfigureServices(IServiceCollection services)
+    public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        
+      
+    }
 
-        // Register Swagger
-        services.AddSwaggerGen(c =>
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebSocket API", Version = "v1" });
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseRouting();
+
+   
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers(); 
+
+          
+            endpoints.MapPost("/api/send", async (List<MyDataModel> messages, CancellationToken cancellationToken) =>
+            {
+                var websocketUri = new Uri("ws://192.168.100.5:5000");
+                using (ClientWebSocket client = new ClientWebSocket())
+                {
+                    try
+                    {
+                        await client.ConnectAsync(websocketUri, cancellationToken);
+                        Console.WriteLine("Connected to the server.");
+
+                        var jsonMessage = JsonSerializer.Serialize(messages);
+                        var bytesToSend = Encoding.UTF8.GetBytes(jsonMessage);
+                        await client.SendAsync(new ArraySegment<byte>(bytesToSend), WebSocketMessageType.Text, true, cancellationToken);
+
+                        await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", cancellationToken);
+                        Console.WriteLine("Connection closed.");
+
+                        return Results.Ok("Message sent and connection closed.");
+                    }
+                    catch (WebSocketException wex)
+                    {
+                        Console.WriteLine("WebSocket error: " + wex.Message);
+                        return Results.Problem("WebSocket error: " + wex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("An error occurred: " + ex.Message);
+                        return Results.Problem("Internal server error: " + ex.Message);
+                    }
+                }
+            });
         });
     }
+}
 
-var app = builder.Build();
-
-app.UseWebSockets();
-
-app.MapPost("/api/send", async (List<MyDataModel> messages) =>
+public class Program
 {
-    using (ClientWebSocket client = new ClientWebSocket())
+    public static void Main(string[] args)
     {
-        try
-        {
-            // Connect to the WebSocket server
-            await client.ConnectAsync(new Uri("ws://localhost:5000"), CancellationToken.None);
-            Console.WriteLine("Connected to the server.");
-
-            // Serialize the message to JSON
-            var jsonMessage = JsonSerializer.Serialize(messages);
-            var bytesToSend = Encoding.UTF8.GetBytes(jsonMessage);
-            await client.SendAsync(new ArraySegment<byte>(bytesToSend), WebSocketMessageType.Text, true, CancellationToken.None);
-
-            // Close the connection
-            await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
-            Console.WriteLine("Connection closed.");
-
-            return Results.Ok("Message sent and connection closed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
-            return Results.Problem("Internal server error: " + ex.Message);
-        }
+        CreateHostBuilder(args).Build().Run();
     }
-});
 
-
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+}
 
 public class MyDataModel
 {

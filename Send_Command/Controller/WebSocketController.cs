@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,12 +15,11 @@ public async Task<IActionResult> SendMessage([FromBody] List< MyDataModel> messa
     {
         try
         {
-    //    List<MyDataModel> sendCommand = new List<MyDataModel>();
-            // Connect to the WebSocket server
-            await client.ConnectAsync(new Uri("ws://localhost:5000"), CancellationToken.None);
+ 
+            await client.ConnectAsync(new Uri("ws://127.0.0.1:5000"), CancellationToken.None);
             Console.WriteLine("Connected to the server.");
 
-            // Serialize the message to JSON
+        
             var jsonMessage = JsonSerializer.Serialize(message);
             var bytesToSend = Encoding.UTF8.GetBytes(jsonMessage);
             await client.SendAsync(new ArraySegment<byte>(bytesToSend), WebSocketMessageType.Text, true, CancellationToken.None);
@@ -41,7 +38,6 @@ public async Task<IActionResult> SendMessage([FromBody] List< MyDataModel> messa
     }
 }
 
-// Define the model class
 public class MyDataModel
 {
     public string Name { get; set; }=string.Empty;

@@ -30,3 +30,4 @@
 /home/neo/Desktop/myprojects/MinimalWebSocketApp_Client/obj/Debug/net8.0/MinimalWebSocketApp_Client.pdb
 /home/neo/Desktop/myprojects/MinimalWebSocketApp_Client/obj/Debug/net8.0/MinimalWebSocketApp_Client.genruntimeconfig.cache
 /home/neo/Desktop/myprojects/MinimalWebSocketApp_Client/obj/Debug/net8.0/ref/MinimalWebSocketApp_Client.dll
+/home/neo/Desktop/myprojects/MinimalWebSocketApp_Client/obj/Debug/net8.0/MinimalWebSocketApp_Client.sourcelink.json

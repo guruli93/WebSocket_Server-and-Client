@@ -45,26 +45,7 @@ public class Startup
         });
     }
 
-    // private async Task HandleWebSocketConnection(WebSocket webSocket)
-    // {
-    //     var buffer = new byte[1024 * 4];
-    //     WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-    //     while (!result.CloseStatus.HasValue)
-    //     {
-    //         await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
-
-    //         result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-    //     string receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-    //      Console.WriteLine(string.Format("Receive data: {0}", receivedMessage) + "\r\n");
-            
-           
-            
-
-    //     }
-
-    //     await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-    // }
 
 
     private async Task HandleWebSocketConnection(WebSocket webSocket)
@@ -95,8 +76,8 @@ public class Startup
                 }
         }
 
-        // Echo the received message back to the client
-        await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+   
+        //await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
         
         result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
     }

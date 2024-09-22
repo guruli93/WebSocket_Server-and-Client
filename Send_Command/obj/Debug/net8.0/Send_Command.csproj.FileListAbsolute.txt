@@ -31,3 +31,4 @@
 /home/neo/Desktop/myprojects/Send_Command/obj/Debug/net8.0/Send_Command.pdb
 /home/neo/Desktop/myprojects/Send_Command/obj/Debug/net8.0/Send_Command.genruntimeconfig.cache
 /home/neo/Desktop/myprojects/Send_Command/obj/Debug/net8.0/ref/Send_Command.dll
+/home/neo/Desktop/myprojects/Send_Command/obj/Debug/net8.0/Send_Command.sourcelink.json
