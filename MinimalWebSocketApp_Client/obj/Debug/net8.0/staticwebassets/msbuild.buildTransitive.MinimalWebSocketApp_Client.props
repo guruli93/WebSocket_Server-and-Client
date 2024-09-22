@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/MinimalWebSocketApp_Client.props" />
+</Project>

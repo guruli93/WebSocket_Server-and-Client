@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "86wsqis1k3lFlGG4QZ+jbXwqgQY4ttNEPepe9OK/29A=",
+  "Source": "MinimalWebSocketApp_Client",
+  "BasePath": "_content/MinimalWebSocketApp_Client",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
